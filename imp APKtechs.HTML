@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Image compression tool for optimizing images with various compression levels.">
+    <title>Image Compression Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header, footer {
+            background-color: #f8f9fa;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        #compressor {
+            margin-bottom: 20px;
+        }
+
+        #adsense {
+            margin-top: 20px;
+            width: 300px; /* Adjust width for your ad */
+        }
+
+        img {
+            margin-top: 20px;
+            max-width: 100%; /* Responsive image */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Image Compression Tool</h1>
+    </header>
+    <main>
+        <section id="compressor">
+            <input type="file" id="imageInput" accept="image/*">
+            <label for="compressionLevel">Select Compression Level:</label>
+            <select id="compressionLevel">
+                <option value="10">10%</option>
+                <option value="20">20%</option>
+                <option value="30">30%</option>
+                <option value="40">40%</option>
+                <option value="50">50%</option>
+            </select>
+            <button id="compressButton">Compress Image</button>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <img id="outputImage" alt="Compressed Image" />
+        </section>
+        <aside id="adsense">
+            <!-- Google AdSense Placeholder -->
+            <div id="adsenseAd">
+                <!-- Google AdSense Code -->
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" <!-- Replace with your AdSense Client ID -->
+                     data-ad-slot="XXXXXXXXXX" <!-- Replace with your AdSense Slot ID -->
+                     data-ad-format="auto"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </aside>
+    </main>
+    <footer>
+        <p>&copy; 2023 Image Compression Tool. All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('compressButton').addEventListener('click', function() {
+            const fileInput = document.getElementById('imageInput');
+            const compressionLevel = document.getElementById('compressionLevel').value;
+            const outputImage = document.getElementById('outputImage');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Compress the image
+                        const quality = (100 - compressionLevel) / 100;
+                        canvas.toBlob(function(blob) {
+                            const url = URL.createObjectURL(blob);
+                            outputImage.src = url;
+                        }, 'image/jpeg', quality);
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert("Please select an image file.");
+            }
+        });
+    </script>
+</body>
+</html>
